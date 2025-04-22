@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kullanıcı Kayıt Formu</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 40px;
+  max-width: 600px;
+  margin: auto;
+  background-color: #f7f9fc;
+  color: #333;
+  line-height: 1.6;
+}
+
+.container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.logo {
+  max-width: 180px;
+  height: auto;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #dce4ec;
+  font-size: 15px;
+  transition: border 0.3s;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+button {
+  margin-top: 25px;
+  padding: 14px;
+  width: 100%;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+#response {
+  margin-top: 25px;
+  text-align: center;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo-container">
+    <img src="/images/logo.png" alt="Logo" class="logo">
+  </div>
+
+  <h1>Kullanıcı Kayıt</h1>
+
+  <div class="form-group">
+      <label for="name">Ad</label>
+      <input type="text" id="name" placeholder="Adınızı girin" value="Deneme Adı" />
+  </div>
+
+  <div class="form-group">
+      <label for="surname">Soyad</label>
+      <input type="text" id="surname" placeholder="Soyadınızı girin" value="Test Soyadı" />
+  </div>
+
+  <div class="form-group">
+      <label for="gender">Cinsiyet</label>
+      <select id="gender">
+        <option value="Male" selected>Erkek</option>
+        <option value="Female">Kadın</option>
+      </select>
+  </div>
+  <div class="form-group">
+    <label for="role">Rol</label>
+    <select id="role">
+      <option value="editor" selected>Editor</option>
+      <option value="admin">Admin</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+      <label for="phone">Telefon</label>
+      <input type="text" id="phone" placeholder="+90555..." value="+905551234567" />
+  </div>
+
+  <div class="form-group">
+      <label for="email">E-posta</label>
+      <input type="email" id="email" placeholder="ornek@mail.com" />
+  </div>
+
+  <div class="form-group">
+      <label for="password">Şifre</label>
+      <input type="password" id="password" placeholder="Şifrenizi girin" value="deneme123" />
+  </div>
+
+  <button onclick="saveUser()">Kaydet</button>
+
+  <div id="response"></div>
+</div>
+
+<script>
+	function saveUser() {
+	  const name = document.getElementById('name').value;
+	  const surname = document.getElementById('surname').value;
+	  const gender = document.getElementById('gender').value;
+	  const phone = document.getElementById('phone').value;
+	  const email = document.getElementById('email').value;
+	  const password = document.getElementById('password').value;
+	  const role = document.getElementById('role').value;
+
+	  if (!name || !surname || !phone || !email || !password || !role) {
+	    document.getElementById('response').innerText = 'Lütfen tüm alanları doldurun.';
+	    document.getElementById('response').className = 'error';
+	    return;
+	  }
+
+	  const user = {
+	    name,
+	    surname,
+	    gender,
+	    phone,
+	    email,
+	    password,
+	    role
+	  };
+
+	  fetch('http://localhost:8081/rest/api/user/saveUser', {
+	    method: 'POST',
+	    headers: {
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify(user)
+	  })
+	  .then(response => {
+	    if (!response.ok) {
+	      throw new Error('Sunucu hatası: ' + response.status);
+	    }
+	    return response.json();
+	  })
+	  .then(data => {
+	    document.getElementById('response').innerText = 'Kayıt başarılı!';
+	    document.getElementById('response').className = 'success';
+	    document.getElementById('name').value = '';
+	    document.getElementById('surname').value = '';
+	    document.getElementById('phone').value = '';
+	    document.getElementById('email').value = '';
+	    document.getElementById('password').value = '';
+	    document.getElementById('role').value = 'EDITOR';
+	  })
+	  .catch(error => {
+	    console.error('Hata:', error);
+	    document.getElementById('response').innerText = 'Hata oluştu: ' + error.message;
+	    document.getElementById('response').className = 'error';
+	  });
+	}
+
+
+
+</script>
+</body>
+</html>
