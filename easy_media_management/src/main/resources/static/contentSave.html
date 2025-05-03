@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Etkinlik Kaydet - Modern Arayüz</title>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+	<style>
+		:root {
+			--primary-color: #007bff;
+			--primary-dark-color: #0056b3;
+			--secondary-bg-color: #f8f9fa;
+			--text-color: #333;
+			--border-color: #ced4da;
+			--success-color: #28a745;
+			--error-color: #dc3545;
+			--shadow-color: rgba(0, 0, 0, 0.08);
+		}
+
+		body {
+			font-family: 'Roboto', sans-serif;
+			background-color: var(--secondary-bg-color);
+			color: var(--text-color);
+			padding: 20px;
+			line-height: 1.6;
+		}
+
+		.container {
+			background: #fff;
+			padding: 30px;
+			border-radius: 12px;
+			max-width: 650px;
+			margin: 40px auto;
+			box-shadow: 0 6px 20px var(--shadow-color);
+			border: 1px solid #e9ecef;
+		}
+
+		h1 {
+			text-align: center;
+			color: var(--primary-color);
+			margin-bottom: 30px;
+			font-weight: 700;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: 500;
+			color: #555;
+		}
+
+		input,
+		textarea {
+			width: 100%;
+			padding: 12px 15px;
+			margin-bottom: 20px;
+			border-radius: 8px;
+			border: 1px solid var(--border-color);
+			box-sizing: border-box;
+			font-size: 1rem;
+			transition: border-color 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		input:focus,
+		textarea:focus {
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+			outline: none;
+		}
+
+		textarea {
+			resize: vertical;
+			min-height: 100px;
+		}
+
+		button {
+			margin-top: 10px;
+			padding: 12px 25px;
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			width: 100%;
+			font-size: 1.1rem;
+			font-weight: 500;
+			transition: background-color 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		button:hover {
+			background-color: var(--primary-dark-color);
+			box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+		}
+
+		button:active {
+			background-color: #004085;
+		}
+
+		#responseMessage {
+			margin-top: 25px;
+			padding: 15px;
+			border-radius: 8px;
+			text-align: center;
+			font-weight: 500;
+			display: none;
+		}
+
+		#responseMessage.success {
+			background-color: #d4edda;
+			color: var(--success-color);
+			border: 1px solid #c3e6cb;
+			display: block;
+		}
+
+		#responseMessage.error {
+			background-color: #f8d7da;
+			color: var(--error-color);
+			border: 1px solid #f5c6cb;
+			display: block;
+		}
+
+		/* Yükleniyor animasyonu için eklenen stil */
+		.loading {
+			display: block;
+			color: var(--primary-color);
+			background-color: #e8f0fe;
+			border: 1px solid #b8daff;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="logo-container">
+			<img src="/images/logo.png" height="400px" width="400px" alt="Logo" class="logo">
+		</div>
+	</div>
+
+	<style>
+		.container {
+			text-align: center;
+			/* İçindeki inline/inline-block öğeleri yatayda merkezler */
+		}
+
+		.logo-container {
+			display: inline-block;
+			/* Container'ı içerik genişliğinde yapar */
+		}
+	</style>
+	<div class="container">
+		<h1>İçerik Yükleme Alanı</h1>
+		<form id="eventForm">
+			<label for="description">Açıklama</label>
+			<textarea id="description" required placeholder="Etkinlik hakkında detaylı bilgi girin...">deneme</textarea>
+
+			<label for="shareText">Paylaşım Metni</label>
+			<input type="text" id="shareText" value="TEST" required placeholder="Sosyal medyada paylaşılacak metin" />
+
+			<label for="numberOfPeople">Katılımcı Sayısı</label>
+			<input type="number" id="numberOfPeople" value="20" required min="1" placeholder="Katılımcı sayısı girin" />
+
+			<label for="improvements">İyileştirmeler</label>
+			<input type="text" id="improvements" value="TEST" required
+				placeholder="Gelecekteki iyileştirme önerileri" />
+
+			<label for="eventDate">Etkinlik Tarihi ve Saati</label>
+			<input type="datetime-local" id="eventDate" value="2025-05-03T14:30" required />
+
+			<button type="submit" id="submitButton">Kaydet</button>
+		</form>
+		<div id="responseMessage"></div>
+	</div>
+
+	<script>
+		document.getElementById('eventForm').addEventListener('submit', function (e) {
+			e.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+
+			const responseMessageElement = document.getElementById('responseMessage');
+			const submitButton = document.getElementById('submitButton');
+
+			// Buton metnini değiştir ve devre dışı bırak
+			submitButton.textContent = 'Kaydediliyor...';
+			submitButton.disabled = true;
+
+			// Mesaj kutusunu temizle ve yükleniyor mesajını göster
+			responseMessageElement.textContent = 'Etkinlik kaydediliyor, lütfen bekleyin...';
+			responseMessageElement.className = 'loading';
+
+			const data = {
+				description: document.getElementById('description').value,
+				shareText: document.getElementById('shareText').value,
+				numberOfPeople: parseInt(document.getElementById('numberOfPeople').value),
+				improvements: document.getElementById('improvements').value,
+				eventDate: document.getElementById('eventDate').value,
+				mediaList: []
+			};
+
+			fetch('http://localhost:8081/rest/api/content/saveContent', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => {
+					// API'den dönen yanıtın OK (2xx) olup olmadığını kontrol et
+					if (!response.ok) {
+						// Hata durumunda yanıtı JSON olarak parse etmeye çalış, hata mesajını al
+						return response.json().then(err => Promise.reject(err));
+					}
+					// Başarılı yanıtı JSON olarak parse et
+					return response.json();
+				})
+				.then(result => {
+					// Başarılı mesajı göster
+					responseMessageElement.textContent = "✅ Etkinlik başarıyla kaydedildi!";
+					responseMessageElement.className = 'success';
+
+					// Butonu normal haline getir
+					submitButton.textContent = 'Kaydet';
+					submitButton.disabled = false;
+				})
+				.catch(error => {
+					console.error('Kaydetme hatası:', error);
+					let errorMessage = "❌ Kaydetme sırasında bir hata oluştu.";
+
+					if (error && error.message) {
+						// Eğer API'den spesifik bir hata mesajı geldiyse onu kullan
+						errorMessage += " Detay: " + error.message;
+					} else if (typeof error === 'string') {
+						errorMessage += " Detay: " + error;
+					} else {
+						errorMessage += " Lütfen konsolu kontrol edin.";
+					}
+
+					// Hata mesajını göster
+					responseMessageElement.textContent = errorMessage;
+					responseMessageElement.className = 'error';
+
+					// Butonu normal haline getir
+					submitButton.textContent = 'Kaydet';
+					submitButton.disabled = false;
+				});
+		});
+	</script>
+</body>
+
+</html>

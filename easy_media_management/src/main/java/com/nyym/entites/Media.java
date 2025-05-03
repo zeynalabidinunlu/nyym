@@ -1,8 +1,6 @@
 package com.nyym.entites;
-
 import java.util.Date;
 import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +19,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Media {
-
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,12 +31,10 @@ public class Media {
 	@Column(name ="file_name")
 	private String fileName;
 	
-	
 	@Column(name = "upload_date")
 	private Date uploaDate;
 	
 	@ManyToOne
-    @JoinColumn(name = "content_uuid", referencedColumnName = "content_uuid") // foreign key olacak
-    private Content content;
-	
+	@JoinColumn(name = "content_uuid", referencedColumnName = "content_uuid")
+	private Content content;
 }
