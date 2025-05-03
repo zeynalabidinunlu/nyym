@@ -15,7 +15,8 @@ public class AdminUserFactory implements UserFactory {
             phone,
             "ADMIN", // sabit rol
             email,
-            password
+            password,
+            null
         );
     }
 }

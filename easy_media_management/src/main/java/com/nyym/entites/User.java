@@ -2,6 +2,8 @@ package com.nyym.entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -39,4 +41,7 @@ public class User {
 
     @Column(name = "password", nullable = false, length = 255)
     private String password;
+    
+    @OneToMany
+    private List<Content> contentList;
 }

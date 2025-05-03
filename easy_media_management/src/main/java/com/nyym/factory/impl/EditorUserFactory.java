@@ -15,7 +15,8 @@ public class EditorUserFactory implements UserFactory {
             phone,
             "EDITOR",
             email,
-            password
+            password,
+            null
         );
     }
 }

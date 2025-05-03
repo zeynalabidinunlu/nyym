@@ -1,11 +1,15 @@
 package com.nyym.entites;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +22,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "content")
 public class Content {
 
-	@Id
-	@Column(name = "content_uuid", nullable = false)
+	@Id()
+	@Column(name = "content_uuid")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID contentUuid;
 
 	@Column(name = "description")
@@ -36,11 +41,10 @@ public class Content {
 
 	@Column(name = "event_date")
 	private LocalDateTime eventDate;
-
-	@Column(name = "user_uuid", nullable = false)
-	private UUID userUuid;
-
-	@Column(name = "category_uuid", nullable = false)
-	private UUID categoryUuid;
-
+		
+	@OneToMany
+	private List<Media> mediaList;
+	
+	
+	
 }
