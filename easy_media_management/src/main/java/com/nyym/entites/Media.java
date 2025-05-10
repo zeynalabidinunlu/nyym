@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Media {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "media_uuid")
 	private UUID mediaUuid;
 	

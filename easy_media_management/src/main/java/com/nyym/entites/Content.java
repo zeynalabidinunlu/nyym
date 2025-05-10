@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class Content {
     @Id()
     @Column(name = "content_uuid")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
     private UUID contentUuid;
     
     @Column(name = "description")
