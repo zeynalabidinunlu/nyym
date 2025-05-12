@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Takvim İçerikleri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        #calendar-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .day-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .day-card:hover {
+            transform: scale(1.02);
+        }
+
+        .day-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .content-block {
+            background-color: #f0f4f8;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .content-block p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        .no-content {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Takvim Günlerinin İçerikleri</h1>
+    <div id="calendar-container"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const response = await fetch("/api/calendar-days");
+            const data = await response.json();
+            const container = document.getElementById("calendar-container");
+
+            data.forEach(day => {
+                const dayDiv = document.createElement("div");
+                dayDiv.className = "day-card";
+
+                const date = document.createElement("h3");
+                date.textContent = "📅 " + day.date;
+                dayDiv.appendChild(date);
+
+                if (day.contents.length === 0) {
+                    const noContent = document.createElement("p");
+                    noContent.className = "no-content";
+                    noContent.textContent = "İçerik yok.";
+                    dayDiv.appendChild(noContent);
+                } else {
+                    day.contents.forEach(content => {
+                        const contentDiv = document.createElement("div");
+                        contentDiv.className = "content-block";
+                        contentDiv.innerHTML = `
+                            <p><strong>Açıklama:</strong> ${content.description}</p>
+                            <p><strong>Paylaşım Metni:</strong> ${content.shareText}</p>
+                            <p><strong>Kişi Sayısı:</strong> ${content.numberOfPeople}</p>
+                            <p><strong>Geliştirmeler:</strong> ${content.improvements}</p>
+                            <p><strong>Etkinlik Tarihi:</strong> ${content.eventDate}</p>
+                        `;
+                        dayDiv.appendChild(contentDiv);
+                    });
+                }
+
+                container.appendChild(dayDiv);
+            });
+        });
+    </script>
+</body>
+</html>

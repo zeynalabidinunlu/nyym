@@ -11,13 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nyym.entites.Content;
 import com.nyym.services.IContentService;
+import com.nyym.services.impl.ContentService;
 
 @RestController
 @RequestMapping("rest/api/content")
 public class ContentControllerImpl {
     
     @Autowired
-    private IContentService contentService;
+    private ContentService contentService;
+    
+    
+    
     
     @GetMapping("/{contentUuid}")
     public ResponseEntity<Content> getContent(@PathVariable UUID contentUuid) {
@@ -31,7 +35,7 @@ public class ContentControllerImpl {
     
     @PostMapping("/saveContent")
     public ResponseEntity<Content> saveContent(@RequestBody Content content) {
-        Content savedContent = contentService.saveContent(content);
+        Content savedContent = contentService.createContent(content);
         return ResponseEntity.ok(savedContent);
     }
 }
